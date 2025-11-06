@@ -11,5 +11,4 @@ export const sx = {
     // "&.Mui-focused": {color: "rgb(25, 118, 210)"},
   },
 }
-
 export default sx;
