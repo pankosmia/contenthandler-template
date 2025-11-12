@@ -2,10 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import {
   AppBar,
   Button,
-  Checkbox,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   Stack,
   TextField,
   Toolbar,
@@ -16,20 +13,14 @@ import {
   Grid2,
   DialogActions,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  CircularProgress,
   Box,
 } from "@mui/material";
 
-import { enqueueSnackbar } from "notistack";
 import {
   i18nContext,
   debugContext,
   postJson,
   doI18n,
-  getAndSetJson,
-  getJson,
   Header,
 } from "pithekos-lib";
 import sx from "./Selection.styles";
@@ -37,42 +28,28 @@ import sx from "./Selection.styles";
 import ListMenuItem from "./ListMenuItem";
 export default function NewTCoreContent() {
   const { i18nRef } = useContext(i18nContext);
+  const { debugRef } = useContext(debugContext);
+
   const [burritos, setBurritos] = useState([]);
   const [selectedBurrito, setSelectedBurrito] = useState(null);
-  const { debugRef } = useContext(debugContext);
-  const [contentName, setContentName] = useState("");
+
   const [contentAbbr, setContentAbbr] = useState("");
-  const [contentType, setContentType] = useState("x-bcvnotes");
   const [contentLanguageCode, setContentLanguageCode] = useState("und");
-  const [showBookFields, setShowBookFields] = useState(true);
   const [bookCode, setBookCode] = useState("");
   const [bookTitle, setBookTitle] = useState("");
   const [bookAbbr, setBookAbbr] = useState("");
-  const [postCount, setPostCount] = useState(0);
-  const [bookCodes, setBookCodes] = useState([]);
-  const [protestantOnly, setProtestantOnly] = useState(true);
-  const [openModal, setOpenModal] = useState(true);
 
   const handleClose = () => {
-    setOpenModal(false);
+    // setOpenModal(false);
     setTimeout(() => {
       window.location.href = "/clients/content";
     }, 200);
   };
-  useEffect(() => {
-    if (openModal === true) {
-      getAndSetJson({
-        url: "/content-utils/versifications",
-      }).then();
-    }
-  }, [openModal]);
 
   useEffect(() => {
     if (selectedBurrito) {
-      setContentName(selectedBurrito.name);
       setContentAbbr(selectedBurrito.abbreviation);
       setContentLanguageCode(selectedBurrito.language_code);
-      setBookCodes(selectedBurrito.book_codes);
       setBookCode("");
       setBookTitle("");
       setBookAbbr("");
@@ -80,59 +57,24 @@ export default function NewTCoreContent() {
   }, [selectedBurrito]);
 
   useEffect(() => {
-    const doFetch = async () => {
-      const versificationResponse = await getJson(
-        "/content-utils/versification/eng",
-        debugRef.current
-      );
-      if (versificationResponse.ok) {
-        setBookCodes(Object.keys(versificationResponse.json.maxVerses));
-      }
-    };
-    if (bookCodes.length === 0 && openModal === true) {
-      doFetch().then();
-    }
-  }, [openModal]);
-
-  useEffect(() => {
-    setContentName("");
     setContentAbbr("");
     setContentLanguageCode("und");
     setBookCode("");
     setBookTitle("");
     setBookAbbr("");
-    setShowBookFields(true);
-  }, [postCount]);
+  }, []);
 
   const handleCreate = async () => {
     const payload = {
-      content_name: contentName,
-      content_abbr: contentAbbr,
-      content_language_code: contentLanguageCode,
-      add_book: showBookFields,
-      book_code: showBookFields ? bookCode : null,
-      book_title: showBookFields ? bookTitle : null,
-      book_abbr: showBookFields ? bookAbbr : null,
+      usfm_repo_path: selectedBurrito.path,
+      book_code: bookCode,
     };
     const response = await postJson(
-      "/git/new-bcv-resource",
+      "/git/new-tcore-resource",
       JSON.stringify(payload),
       debugRef.current
     );
-    if (response.ok) {
-      setPostCount(postCount + 1);
-      enqueueSnackbar(
-        doI18n("pages:content:content_created", i18nRef.current),
-        { variant: "success" }
-      );
-    } else {
-      enqueueSnackbar(
-        `${doI18n("pages:content:content_creation_error", i18nRef.current)}: ${
-          response.status
-        }`,
-        { variant: "error" }
-      );
-    }
+
     handleClose();
   };
   useEffect(() => {
@@ -141,7 +83,6 @@ export default function NewTCoreContent() {
         const response = await fetch("/burrito/metadata/summaries");
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
         const data = await response.json();
-        console.log(Array(data));
         // Filter only those with flavor_type = scripture
         const burritoArray = Object.entries(data).map(([key, value]) => ({
           path: key,
@@ -152,7 +93,6 @@ export default function NewTCoreContent() {
         const scriptures = burritoArray.filter(
           (item) => item?.flavor_type === "scripture"
         );
-        console.log(scriptures);
         setBurritos(scriptures);
       } catch (err) {
         console.error("Error fetching summaries:", err);
@@ -190,7 +130,7 @@ export default function NewTCoreContent() {
       />
       <Dialog
         fullWidth={true}
-        open={openModal}
+        open={true}
         onClose={handleClose}
         sx={{
           backdropFilter: "blur(3px)",
@@ -214,12 +154,11 @@ export default function NewTCoreContent() {
           </Toolbar>
         </AppBar>
         <Typography variant="subtitle2" sx={{ ml: 1, p: 1 }}>
-          {" "}
           {doI18n(`pages:content:required_field`, i18nRef.current)}
         </Typography>
         <Stack spacing={2} sx={{ m: 2 }}>
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="burrito-select-label">
+            <InputLabel required id="burrito-select-label">
               {doI18n(`pages:content:choose_document`, i18nRef.current)}
             </InputLabel>
             <Select
@@ -235,6 +174,48 @@ export default function NewTCoreContent() {
               ))}
             </Select>
           </FormControl>
+
+          <TextField
+            id="abbr"
+            disabled
+            sx={{
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            label={doI18n("pages:content:abbreviation", i18nRef.current)}
+            value={contentAbbr}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            onChange={(event) => {
+              setContentAbbr(event.target.value);
+            }}
+          />
+
+          <TextField
+            id="languageCode"
+            sx={{
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            disabled
+            label={doI18n("pages:content:lang_code", i18nRef.current)}
+            value={contentLanguageCode}
+            onChange={(event) => {
+              setContentLanguageCode(event.target.value);
+            }}
+          />
           <>
             <Grid2
               container
@@ -281,25 +262,23 @@ export default function NewTCoreContent() {
                     sx={sx.select}
                   >
                     {selectedBurrito?.name &&
-                      (protestantOnly ? bookCodes.slice(0, 66) : bookCodes).map(
-                        (listItem, n) => (
-                          <MenuItem key={n} value={listItem} dense>
-                            <ListMenuItem
-                              listItem={`${listItem} - ${doI18n(
-                                `scripture:books:${listItem}`,
-                                i18nRef.current
-                              )}`}
-                            />
-                          </MenuItem>
-                        )
-                      )}
+                      selectedBurrito.book_codes.map((listItem, n) => (
+                        <MenuItem key={n} value={listItem} dense>
+                          <ListMenuItem
+                            listItem={`${listItem} - ${doI18n(
+                              `scripture:books:${listItem}`,
+                              i18nRef.current
+                            )}`}
+                          />
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Grid2>
               <Grid2 item size={4}>
                 <TextField
                   id="bookAbbr"
-                  required
+                  disabled
                   sx={{
                     width: "100%",
                     pointerEvents: "none", // disables all mouse interaction
@@ -322,7 +301,7 @@ export default function NewTCoreContent() {
               <Grid2 item size={4}>
                 <TextField
                   id="bookTitle"
-                  required
+                  disabled
                   sx={{
                     width: "100%",
                     pointerEvents: "none", // disables all mouse interaction
@@ -344,90 +323,8 @@ export default function NewTCoreContent() {
               </Grid2>
             </Grid2>
           </>
-
-          <TextField
-            id="name"
-            required
-            sx={{
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            label={doI18n("pages:content:name", i18nRef.current)}
-            value={contentName}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            onChange={(event) => {
-              setContentName(event.target.value);
-            }}
-          />
-          <TextField
-            id="abbr"
-            required
-            sx={{
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            label={doI18n("pages:content:abbreviation", i18nRef.current)}
-            value={contentAbbr}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            onChange={(event) => {
-              setContentAbbr(event.target.value);
-            }}
-          />
-          <TextField
-            id="type"
-            required
-            disabled={true}
-            sx={{
-              display: "none",
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            label={doI18n("pages:content:type", i18nRef.current)}
-            value={contentType}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            onChange={(event) => {
-              setContentType(event.target.value);
-            }}
-          />
-          <TextField
-            id="languageCode"
-            required
-            sx={{
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            label={doI18n("pages:content:lang_code", i18nRef.current)}
-            value={contentLanguageCode}
-            onChange={(event) => {
-              setContentLanguageCode(event.target.value);
-            }}
-          />
         </Stack>
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             {doI18n("pages:content:close", i18nRef.current)}
@@ -438,14 +335,11 @@ export default function NewTCoreContent() {
             color="primary"
             disabled={
               !(
-                contentName.trim().length > 0 &&
                 contentAbbr.trim().length > 0 &&
-                contentType.trim().length > 0 &&
                 contentLanguageCode.trim().length > 0 &&
-                (!showBookFields ||
-                  (bookCode.trim().length === 3 &&
-                    bookTitle.trim().length > 0 &&
-                    bookAbbr.trim().length > 0))
+                bookCode.trim().length === 3 &&
+                bookTitle.trim().length > 0 &&
+                bookAbbr.trim().length > 0
               )
             }
             onClick={handleCreate}
