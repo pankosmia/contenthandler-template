@@ -19,6 +19,10 @@
     "create_content_tCore": {
       "en": "New TCore content",
       "fr": "Nouveau contenu TCore"
-    }    
+    },
+    "choose_document" : {
+      "en" : "Choose document",
+      "fr" : "Choisir un document"
+    }   
   }
 }
