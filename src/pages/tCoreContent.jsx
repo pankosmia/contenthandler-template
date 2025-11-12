@@ -49,11 +49,9 @@ export default function NewTCoreContent() {
   const [bookTitle, setBookTitle] = useState("");
   const [bookAbbr, setBookAbbr] = useState("");
   const [postCount, setPostCount] = useState(0);
-  const [versification, setVersification] = useState("eng");
   const [bookCodes, setBookCodes] = useState([]);
   const [protestantOnly, setProtestantOnly] = useState(true);
   const [openModal, setOpenModal] = useState(true);
-
 
   const handleClose = () => {
     setOpenModal(false);
@@ -74,10 +72,10 @@ export default function NewTCoreContent() {
       setContentName(selectedBurrito.name);
       setContentAbbr(selectedBurrito.abbreviation);
       setContentLanguageCode(selectedBurrito.language_code);
-      setBookCodes(selectedBurrito.book_codes)
-      setBookCode("")
-      setBookTitle("")
-      setBookAbbr("")
+      setBookCodes(selectedBurrito.book_codes);
+      setBookCode("");
+      setBookTitle("");
+      setBookAbbr("");
     }
   }, [selectedBurrito]);
 
@@ -100,11 +98,10 @@ export default function NewTCoreContent() {
     setContentName("");
     setContentAbbr("");
     setContentLanguageCode("und");
-    setBookCode("TIT");
-    setBookTitle("Titus");
-    setBookAbbr("Ti");
+    setBookCode("");
+    setBookTitle("");
+    setBookAbbr("");
     setShowBookFields(true);
-    setVersification("eng");
   }, [postCount]);
 
   const handleCreate = async () => {
@@ -112,7 +109,6 @@ export default function NewTCoreContent() {
       content_name: contentName,
       content_abbr: contentAbbr,
       content_language_code: contentLanguageCode,
-      versification: versification,
       add_book: showBookFields,
       book_code: showBookFields ? bookCode : null,
       book_title: showBookFields ? bookTitle : null,
@@ -174,7 +170,7 @@ export default function NewTCoreContent() {
 
   return (
     <Box>
-      <Box  
+      <Box
         sx={{
           position: "absolute",
           width: "100%",
@@ -223,7 +219,9 @@ export default function NewTCoreContent() {
         </Typography>
         <Stack spacing={2} sx={{ m: 2 }}>
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel id="burrito-select-label">Choose Burrito</InputLabel>
+            <InputLabel id="burrito-select-label">
+              {doI18n(`pages:content:choose_document`, i18nRef.current)}
+            </InputLabel>
             <Select
               labelId="burrito-select-label"
               value={selectedBurrito?.name || ""}
@@ -237,48 +235,6 @@ export default function NewTCoreContent() {
               ))}
             </Select>
           </FormControl>
-
-         
-          <TextField
-            id="name"
-            required
-            label={doI18n("pages:content:name", i18nRef.current)}
-            value={contentName}
-            onChange={(event) => {
-              setContentName(event.target.value);
-            }}
-          />
-          <TextField
-            id="abbr"
-            required
-            label={doI18n("pages:content:abbreviation", i18nRef.current)}
-            value={contentAbbr}
-            onChange={(event) => {
-              setContentAbbr(event.target.value);
-            }}
-          />
-          <TextField
-            id="type"
-            required
-            disabled={true}
-            sx={{ display: "none" }}
-            label={doI18n("pages:content:type", i18nRef.current)}
-            value={contentType}
-            onChange={(event) => {
-              setContentType(event.target.value);
-            }}
-          />
-          <TextField
-            id="languageCode"
-            required
-            label={doI18n("pages:content:lang_code", i18nRef.current)}
-            value={contentLanguageCode}
-            onChange={(event) => {
-              setContentLanguageCode(event.target.value);
-            }}
-          />
-
-
           <>
             <Grid2
               container
@@ -324,18 +280,19 @@ export default function NewTCoreContent() {
                     }}
                     sx={sx.select}
                   >
-                    {(protestantOnly ? bookCodes.slice(0, 66) : bookCodes).map(
-                      (listItem, n) => (
-                        <MenuItem key={n} value={listItem} dense>
-                          <ListMenuItem
-                            listItem={`${listItem} - ${doI18n(
-                              `scripture:books:${listItem}`,
-                              i18nRef.current
-                            )}`}
-                          />
-                        </MenuItem>
-                      )
-                    )}
+                    {selectedBurrito?.name &&
+                      (protestantOnly ? bookCodes.slice(0, 66) : bookCodes).map(
+                        (listItem, n) => (
+                          <MenuItem key={n} value={listItem} dense>
+                            <ListMenuItem
+                              listItem={`${listItem} - ${doI18n(
+                                `scripture:books:${listItem}`,
+                                i18nRef.current
+                              )}`}
+                            />
+                          </MenuItem>
+                        )
+                      )}
                   </Select>
                 </FormControl>
               </Grid2>
@@ -343,9 +300,20 @@ export default function NewTCoreContent() {
                 <TextField
                   id="bookAbbr"
                   required
-                  sx={{ width: "100%" }}
+                  sx={{
+                    width: "100%",
+                    pointerEvents: "none", // disables all mouse interaction
+                    "& .MuiInputBase-input": {
+                      cursor: "default", // prevents text cursor
+                    },
+                  }}
                   label={doI18n("pages:content:book_abbr", i18nRef.current)}
                   value={bookAbbr}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
                   onChange={(event) => {
                     setBookAbbr(event.target.value);
                   }}
@@ -355,9 +323,20 @@ export default function NewTCoreContent() {
                 <TextField
                   id="bookTitle"
                   required
-                  sx={{ width: "100%" }}
+                  sx={{
+                    width: "100%",
+                    pointerEvents: "none", // disables all mouse interaction
+                    "& .MuiInputBase-input": {
+                      cursor: "default", // prevents text cursor
+                    },
+                  }}
                   label={doI18n("pages:content:book_title", i18nRef.current)}
                   value={bookTitle}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
                   onChange={(event) => {
                     setBookTitle(event.target.value);
                   }}
@@ -365,6 +344,89 @@ export default function NewTCoreContent() {
               </Grid2>
             </Grid2>
           </>
+
+          <TextField
+            id="name"
+            required
+            sx={{
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            label={doI18n("pages:content:name", i18nRef.current)}
+            value={contentName}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            onChange={(event) => {
+              setContentName(event.target.value);
+            }}
+          />
+          <TextField
+            id="abbr"
+            required
+            sx={{
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            label={doI18n("pages:content:abbreviation", i18nRef.current)}
+            value={contentAbbr}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            onChange={(event) => {
+              setContentAbbr(event.target.value);
+            }}
+          />
+          <TextField
+            id="type"
+            required
+            disabled={true}
+            sx={{
+              display: "none",
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            label={doI18n("pages:content:type", i18nRef.current)}
+            value={contentType}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            onChange={(event) => {
+              setContentType(event.target.value);
+            }}
+          />
+          <TextField
+            id="languageCode"
+            required
+            sx={{
+              pointerEvents: "none", // disables all mouse interaction
+              "& .MuiInputBase-input": {
+                cursor: "default", // prevents text cursor
+              },
+            }}
+            slotProps={{
+              input: {
+                readOnly: true,
+              },
+            }}
+            label={doI18n("pages:content:lang_code", i18nRef.current)}
+            value={contentLanguageCode}
+            onChange={(event) => {
+              setContentLanguageCode(event.target.value);
+            }}
+          />
         </Stack>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -380,7 +442,6 @@ export default function NewTCoreContent() {
                 contentAbbr.trim().length > 0 &&
                 contentType.trim().length > 0 &&
                 contentLanguageCode.trim().length > 0 &&
-                versification.trim().length === 3 &&
                 (!showBookFields ||
                   (bookCode.trim().length === 3 &&
                     bookTitle.trim().length > 0 &&
