@@ -91,8 +91,9 @@ export default function NewTCoreContent() {
 
         // Filter only scripture burritos
         const scriptures = burritoArray.filter(
-          (item) => item?.flavor_type === "scripture"
+          (item) => item?.flavor === "textTranslation"
         );
+        console.log(scriptures)
         setBurritos(scriptures);
       } catch (err) {
         console.error("Error fetching summaries:", err);
