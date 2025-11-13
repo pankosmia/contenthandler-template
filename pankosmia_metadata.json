@@ -20,13 +20,17 @@
       "en": "tCore content",
       "fr": "Nouveau contenu tCore"
     },
-    "choose_document" : {
-      "en" : "Choose document",
-      "fr" : "Choisir un document"
+    "choose_document": {
+      "en": "Choose document",
+      "fr": "Choisir un document"
+    },
+    "no_local_project": {
+      "fr": "Au moins un projet de traduction local est requis pour créer un projet d'alignement",
+      "en": "Need at least one local translation project to create an alignment project "
     },
     "t_core_project_not_created" : {
       "fr" : "le projet de check tCore n'a pas été créé",
       "en" : "the tCore check project could not be created"   
+    }
   }
-}
 }
