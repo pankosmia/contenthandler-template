@@ -105,8 +105,9 @@ export default function NewTCoreContent() {
         }));
 
         // Filter only scripture burritos
+        console.log(burritoArray)
         const scriptures = burritoArray.filter(
-          (item) => item?.flavor === "textTranslation"
+          (item) => item?.flavor === "textTranslation" && item.path.startsWith("_local_/_local_")
         );
         console.log(scriptures)
         setBurritos(scriptures);
