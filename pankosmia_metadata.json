@@ -25,8 +25,8 @@
       "fr" : "Choisir un document"
     },
     "t_core_project_not_created" : {
-      "fr" : "le projet de check tcore n'a pas été créé",
-      "en" : "the tcore check project could not be created"   
+      "fr" : "le projet de check tCore n'a pas été créé",
+      "en" : "the tCore check project could not be created"   
   }
 }
 }
