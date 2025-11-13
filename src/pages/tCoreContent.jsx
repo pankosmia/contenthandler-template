@@ -109,6 +109,11 @@ export default function NewTCoreContent() {
         const scriptures = burritoArray.filter(
           (item) => item?.flavor === "textTranslation" && item.path.startsWith("_local_/_local_")
         );
+        if(scriptures.length <= 0){
+          
+          setErrorMessage(doI18n(`pages:core-contenthandler_t_core:no_local_project`, i18nRef.current));
+          setErrorDialogOpen(true);
+        }
         console.log(scriptures)
         setBurritos(scriptures);
       } catch (err) {
@@ -117,7 +122,7 @@ export default function NewTCoreContent() {
       }
     }
     fetchSummaries();
-  }, []);
+  }, [i18nRef.current]);
 
   const handleSelectBurrito = (event) => {
     const name = event.target.value;
