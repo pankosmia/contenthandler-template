@@ -14,6 +14,7 @@ import {
   DialogActions,
   Dialog,
   Box,
+  DialogContent
 } from "@mui/material";
 
 import {
@@ -33,6 +34,10 @@ export default function NewTCoreContent() {
   const [burritos, setBurritos] = useState([]);
   const [selectedBurrito, setSelectedBurrito] = useState(null);
 
+
+  const [errorDialogOpen,setErrorDialogOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [contentAbbr, setContentAbbr] = useState("");
   const [contentLanguageCode, setContentLanguageCode] = useState("und");
   const [bookCode, setBookCode] = useState("");
@@ -46,6 +51,10 @@ export default function NewTCoreContent() {
     }, 200);
   };
 
+  const handleCloseErrorDialog = () => {
+    setErrorDialogOpen(false);
+    handleClose();
+  };
   useEffect(() => {
     if (selectedBurrito) {
       setContentAbbr(selectedBurrito.abbreviation);
@@ -74,8 +83,14 @@ export default function NewTCoreContent() {
       JSON.stringify(payload),
       debugRef.current
     );
+     if (response.ok) {
+      handleClose();
+    } else {
 
-    handleClose();
+      setErrorMessage(`${doI18n("pages:core-contenthandler_t_core:t_core_project_not_created", i18nRef.current)}: ${response.status
+        }`);
+      setErrorDialogOpen(true);
+    }
   };
   useEffect(() => {
     async function fetchSummaries() {
@@ -160,7 +175,7 @@ export default function NewTCoreContent() {
         <Stack spacing={2} sx={{ m: 2 }}>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel required id="burrito-select-label">
-              {doI18n(`pages:content:choose_document`, i18nRef.current)}
+              {doI18n(`pages:core-contenthandler_t_core:choose_document`, i18nRef.current)}
             </InputLabel>
             <Select
               labelId="burrito-select-label"
@@ -346,6 +361,17 @@ export default function NewTCoreContent() {
             onClick={handleCreate}
           >
             {doI18n("pages:content:create", i18nRef.current)}
+          </Button>
+        </DialogActions>
+      </Dialog>
+       {/* Error Dialog */}
+      <Dialog open={errorDialogOpen} onClose={handleCloseErrorDialog}>
+        <DialogContent>
+          <Typography color="error">{errorMessage}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseErrorDialog} variant="contained" color="primary">
+            {doI18n("pages:content:close", i18nRef.current)}
           </Button>
         </DialogActions>
       </Dialog>
