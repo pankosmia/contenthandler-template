@@ -1,3 +1,3 @@
-# contenthandler-template
+# core-contenthandler_text_translation
 
-contenthandler-template
+core-contenthandler_text_translation
