@@ -16,5 +16,5 @@ export default defineConfig({
     emptyOutDir: true,
     
   },
-  base: '/clients/core-contenthandler_text_translation/'
+  base: '/clients/contenthandler-template/'
 })

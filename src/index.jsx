@@ -2,11 +2,8 @@ import {createRoot} from "react-dom/client";
 import {SpaContainer} from "pithekos-lib";
 import {createHashRouter, RouterProvider} from "react-router-dom";
 import './index.css';
-import NewBibleContent from "./pages/NewTextTranslationContent";
-import NewTextTranslationBook from "./pages/NewTextTranslationBook";
-import ZipExport from "./pages/Export/ZipExport";
-import UsfmExport from "./pages/Export/UsfmExport";
-import PdfGenerate from "./pages/Export/PdfGenerate";
+import CreatePage from "./pages/create";
+import UpdatePage from "./pages/update"
 import App from "./App";
 
 const router = createHashRouter([
@@ -15,24 +12,12 @@ const router = createHashRouter([
         element:<App/>
     },
     {
-        path: "textTranslation",
-        element: <NewBibleContent/>
+        path: "createPage",
+        element: <CreatePage/>
     },
     {
-        path:"newBook",
-        element:<NewTextTranslationBook/>
-    },
-    {
-        path:"zipExport",
-        element:<ZipExport/>
-    },
-    {
-        path:"usfmExport",
-        element:<UsfmExport/>
-    },
-    {
-        path:"pdfExport",
-        element:<PdfGenerate/>
+        path: "updatePage",
+        element: <UpdatePage/>,
     }
 ]);
 

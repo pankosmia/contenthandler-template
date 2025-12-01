@@ -1,180 +1,18 @@
 {
-  "id": "core-contenthandler_text_translation",
-  "exclude_from_menu": true,
-  "exclude_from_dashboard": true,
+  "id": "contenthandler-template",
   "require": {
     "net": false,
     "debug": true
   },
   "i18n": {
     "title": {
-      "en": "core-contenthandler_text_translation"
+      "en": "contenthandler-template"
     },
     "summary": {
-      "en": "core-contenthandler_text_translation"
+      "en": "contenthandler-template"
     },
     "stub_content": {
       "en": "Content goes here"
-    },
-    "create_content_text_translation": {
-      "en": "Bible",
-      "fr": "Bible"
-    },
-    "name_is_taken": {
-      "en": "The name is already taken",
-      "es": "El nombre ya está en uso"
-    },
-    "error_data":{
-      "en":"Error fetching data",
-      "fr":"Erreur lors de la récupération des données"
-    },
-    "add_content": {
-      "en": "Add content to document",
-      "fr": "Ajouter du contenu au document"
-    },
-    "no_content_radio": {
-      "en": "None",
-      "fr": "Aucun"
-    },
-    "book_content_radio": {
-      "en": "Book",
-      "fr": "Livre"
-    },
-    "plan_content_radio": {
-      "en": "Plan",
-      "fr": "Plan"
-    },
-    "select_plan": {
-      "en": "Choose a plan",
-      "fr": "Choisissez un plan"
-    },
-    "could_not_fetch": {
-      "en": "Could not fetch",
-      "es": "No se pudo obtener",
-      "id": "Tidak dapat ambil"
-    },
-    "print": {
-      "en": "Print",
-      "id": "Cetak"
-    },
-    "pdf_preview": {
-      "en": "PDF Preview",
-      "id": "Pratinjau PDF"
-    },
-    "export_as_usfm": {
-      "en": "Export Content as USFM",
-      "es": "Exportar Contenido como USFM",
-      "id": "Ekspor konten sebagai USFM"
-    },
-    "export_as_zip": {
-      "en": "Export Content as ZIP",
-      "es": "Exportar Contenido como ZIP",
-      "id": "Ekspor Konten sebagai ZIP"
-    },
-    "generate_as_pdf": {
-      "en": "Generate a PDF",
-      "id": "Hasilkan PDF"
-    },
-    "pick_one_book_export": {
-      "en": "Choose a book to export",
-      "es": "Elige uno libro para exportar",
-      "id": "Pilih buku buat diekspor"
-    },
-    "export_zip": {
-      "en": "Export as ZIP",
-      "es": "Exportar como ZIP",
-      "id": "Ekspor sebagai ZIP"
-    },
-    "export_usfm": {
-      "en": "Export as USFM",
-      "es": "Exportar como USFM",
-      "id": "Ekspor USFM"
-    },
-    "export_pdf": {
-      "en": "Export as PDF",
-      "es": "Exportar como PDF",
-      "id": "Ekspor sebagai PDF"
-    },
-    "show_by_verse": {
-      "en": "Show by verse",
-      "es": "Mostrar por versículos",
-      "id": "Tampil per ayat"
-    },
-    "show_title": {
-      "en": "Show title",
-      "es": "Mostrar el título",
-      "id": "Tampil judul utama"
-    },
-    "show_headings": {
-      "en": "Show headings",
-      "es": "Mostrar encabezados",
-      "id": "Tampil judul-judul"
-    },
-    "show_introductions": {
-      "en": "Show introductions",
-      "es": "Mostrar introducciones",
-      "id": "Tampil pengantar-pengantar"
-    },
-    "show_footnotes": {
-      "en": "Show footnotes",
-      "es": "Mostrar notas a pie de página",
-      "id": "Tampil catatan kaki"
-    },
-    "show_xrefs": {
-      "en": "Show cross references",
-      "es": "Mostrar referencias cruzadas",
-      "id": "Tampil referensi silang"
-    },
-    "show_para_styles": {
-      "en": "Show paragraph styles",
-      "es": "Mostrar estilos de párrafo",
-      "id": "Tampil gaya paragraf"
-    },
-    "show_character_markup": {
-      "en": "Show character markup",
-      "es": "Mostrar el marcado de caracteres",
-      "id": "Tampil markup karakter"
-    },
-    "show_chapter_labels": {
-      "en": "Show chapter labels",
-      "es": "Mostrar los nombres de los capítulos",
-      "id": "Tampil label fasal"
-    },
-    "show_verses_labels": {
-      "en": "Show verses labels",
-      "es": "Mostrar los nomnbres de los versículos",
-      "id": "Tampil label ayat"
-    },
-    "show_first_verse_label": {
-      "en": "Show first verse label",
-      "es": "Mostrar el nombre del primer versículo",
-      "id": "Tampil label ayat"
-    },
-    "number_of_columns": {
-      "en": "Select the number of columns",
-      "es": "Seleccione el número de columnas",
-      "id": "Pilih jumlah kolum-kolum"
-    },
-    "export_label": {
-      "en": "EXPORT",
-      "es": "EXPORTAR",
-      "id": "EKSPOR"
-    },
-    "no_books_selected": {
-      "en": "No books were selected so nothing was exported",
-      "fr": "Aucun livre n'a été selectionné pour exportation",
-      "id": "Buku tidak ditentukan jadi tidak ada ekspor"
-    },
-    "export_all": {
-      "en": "Export all books",
-      "es": "Exportar todos los libros",
-      "id": "Ekspor semua buku"
-    },
-
-    "pick_one_or_more_books_export": {
-      "en": "Choose one or more books to export",
-      "es": "Elige uno o más libros para exportar",
-      "id": "Pilih satuh lebih buku buat diekspor"
     }
   }
 }

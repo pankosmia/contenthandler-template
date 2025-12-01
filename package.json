@@ -1,21 +1,17 @@
 {
-  "name": "core-contenthandler_text_translation",
+  "name": "contenthandler-template",
   "version": "0.0.1",
   "private": true,
-  "homepage": "/clients/core-contenthandler_text_translation",
+  "homepage": "/clients/contenthandler-template",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.1.5",
-    "color": "^5.0.2",
     "eslint-config-react-app": "^7.0.1",
-    "font-detect-rhl": "^1.1.8",
-    "pithekos-lib": "^0.11.20",
-    "proskomma-core": "^0.11.2",
+    "pithekos-lib": "^0.11.4",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0",
-    "react-router-dom": "^7.9.4",
-    "zip-project": "^1.0.0"
+    "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
