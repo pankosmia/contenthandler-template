@@ -47,7 +47,7 @@ export default function NewTCoreContent() {
   const handleClose = () => {
     // setOpenModal(false);
     setTimeout(() => {
-      window.location.href = "/clients/content";
+      window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
     }, 200);
   };
 
