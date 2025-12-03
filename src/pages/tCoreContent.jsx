@@ -45,9 +45,9 @@ export default function NewTCoreContent() {
   const [bookAbbr, setBookAbbr] = useState("");
 
   const handleClose = () => {
-    // setOpenModal(false);
     setTimeout(() => {
-      window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
+      window.location.href = "/clients/content";
+      // window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
     }, 200);
   };
 
@@ -84,7 +84,7 @@ export default function NewTCoreContent() {
       debugRef.current
     );
     if (response.ok) {
-      handleClose();
+      window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
     } else {
       setErrorMessage(
         `${doI18n(
@@ -122,7 +122,6 @@ export default function NewTCoreContent() {
           );
           setErrorDialogOpen(true);
         }
-        console.log(scriptures);
         setBurritos(scriptures);
       } catch (err) {
         console.error("Error fetching summaries:", err);
