@@ -14,7 +14,7 @@ import {
   DialogActions,
   Dialog,
   Box,
-  DialogContent
+  DialogContent,
 } from "@mui/material";
 
 import {
@@ -23,6 +23,7 @@ import {
   postJson,
   doI18n,
   Header,
+  getJson,
 } from "pithekos-lib";
 import sx from "./Selection.styles";
 
@@ -34,8 +35,7 @@ export default function NewTCoreContent() {
   const [burritos, setBurritos] = useState([]);
   const [selectedBurrito, setSelectedBurrito] = useState(null);
 
-
-  const [errorDialogOpen,setErrorDialogOpen] = useState(false)
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [contentAbbr, setContentAbbr] = useState("");
@@ -45,9 +45,9 @@ export default function NewTCoreContent() {
   const [bookAbbr, setBookAbbr] = useState("");
 
   const handleClose = () => {
-    // setOpenModal(false);
     setTimeout(() => {
       window.location.href = "/clients/content";
+      // window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
     }, 200);
   };
 
@@ -83,21 +83,24 @@ export default function NewTCoreContent() {
       JSON.stringify(payload),
       debugRef.current
     );
-     if (response.ok) {
-      handleClose();
+    if (response.ok) {
+      window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
     } else {
-
-      setErrorMessage(`${doI18n("pages:core-contenthandler_t_core:t_core_project_not_created", i18nRef.current)}: ${response.status
-        }`);
+      setErrorMessage(
+        `${doI18n(
+          "pages:core-contenthandler_t_core:t_core_project_not_created",
+          i18nRef.current
+        )}: ${response.status}`
+      );
       setErrorDialogOpen(true);
     }
   };
   useEffect(() => {
     async function fetchSummaries() {
       try {
-        const response = await fetch("/burrito/metadata/summaries");
+        const response = await getJson("/burrito/metadata/summaries");
         if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-        const data = await response.json();
+        const data = await response.json;
         // Filter only those with flavor_type = scripture
         const burritoArray = Object.entries(data).map(([key, value]) => ({
           path: key,
@@ -105,16 +108,20 @@ export default function NewTCoreContent() {
         }));
 
         // Filter only scripture burritos
-        console.log(burritoArray)
         const scriptures = burritoArray.filter(
-          (item) => item?.flavor === "textTranslation" && item.path.startsWith("_local_/_local_")
+          (item) =>
+            item?.flavor === "textTranslation" &&
+            item.path.startsWith("_local_/_local_")
         );
-        if(scriptures.length <= 0){
-          
-          setErrorMessage(doI18n(`pages:core-contenthandler_t_core:no_local_project`, i18nRef.current));
+        if (scriptures.length <= 0) {
+          setErrorMessage(
+            doI18n(
+              `pages:core-contenthandler_t_core:no_local_project`,
+              i18nRef.current
+            )
+          );
           setErrorDialogOpen(true);
         }
-        console.log(scriptures)
         setBurritos(scriptures);
       } catch (err) {
         console.error("Error fetching summaries:", err);
@@ -180,21 +187,23 @@ export default function NewTCoreContent() {
         </Typography>
         <Stack spacing={2} sx={{ m: 2 }}>
           <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel required id="burrito-select-label">
-              {doI18n(`pages:core-contenthandler_t_core:choose_document`, i18nRef.current)}
-            </InputLabel>
-            <Select
-              labelId="burrito-select-label"
+            <TextField
+              required
+              id="burrito-select-label"
+              select
               value={selectedBurrito?.name || ""}
-              label="Choose Burrito"
               onChange={handleSelectBurrito}
+              label={doI18n(
+                `pages:core-contenthandler_t_core:choose_document`,
+                i18nRef.current
+              )}
             >
               {burritos.map((burrito) => (
                 <MenuItem key={burrito.name} value={burrito.name}>
                   {burrito.name}
                 </MenuItem>
               ))}
-            </Select>
+            </TextField>
           </FormControl>
 
           <TextField
@@ -370,13 +379,17 @@ export default function NewTCoreContent() {
           </Button>
         </DialogActions>
       </Dialog>
-       {/* Error Dialog */}
+      {/* Error Dialog */}
       <Dialog open={errorDialogOpen} onClose={handleCloseErrorDialog}>
         <DialogContent>
           <Typography color="error">{errorMessage}</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseErrorDialog} variant="contained" color="primary">
+          <Button
+            onClick={handleCloseErrorDialog}
+            variant="contained"
+            color="primary"
+          >
             {doI18n("pages:content:close", i18nRef.current)}
           </Button>
         </DialogActions>
