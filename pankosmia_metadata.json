@@ -6,6 +6,17 @@
     "net": false,
     "debug": false
   },
+  "endpoints": {
+    "x-tcore": {
+      "create_document": [
+        {
+          "doc": "Create a document for translationCore",
+          "label": "pages:content:new_tcore_content",
+          "url": "/clients/core-contenthandler_t_core#/createDocument/tCoreContent"
+        }
+      ]
+    }
+  },
   "i18n": {
     "title": {
       "en": "core-contenthandler_t_core"
@@ -31,6 +42,10 @@
     "no_local_project": {
       "fr": "Au moins un projet de traduction local est requis pour créer un projet d'alignement",
       "en": "Need at least one local translation project to create an alignment project "
-    }
+    },
+    "project_already_exist" :{
+      "fr": "Vous possedez deja un projet tCore ayant pour origin cette bible",
+      "en": "There is a tCore project that have this bible for origin"
   }
+}
 }
