@@ -28,16 +28,12 @@
       "en": "Content goes here"
     },
     "create_content_tCore": {
-      "en": "New TCore content",
-      "fr": "Nouveau contenu TCore"
+      "en": "tCore content",
+      "fr": "Nouveau contenu tCore"
     },
     "choose_document": {
       "en": "Choose document",
       "fr": "Choisir un document"
-    },
-    "t_core_project_not_created": {
-      "fr": "le projet de check tcore n'a pas été créé",
-      "en": "the tcore check project could not be created"
     },
     "no_local_project": {
       "fr": "Au moins un projet de traduction local est requis pour créer un projet d'alignement",
@@ -48,4 +44,9 @@
       "en": "There is a tCore project that have this bible for origin"
   }
 }
+    "t_core_project_not_created" : {
+      "fr" : "le projet de check tCore n'a pas été créé",
+      "en" : "the tCore check project could not be created"   
+    }
+  }
 }
