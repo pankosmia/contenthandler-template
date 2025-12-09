@@ -28,12 +28,14 @@ import {
 import sx from "./Selection.styles";
 
 import ListMenuItem from "./ListMenuItem";
+
 export default function NewTCoreContent() {
   const { i18nRef } = useContext(i18nContext);
   const { debugRef } = useContext(debugContext);
 
   const [burritos, setBurritos] = useState([]);
   const [selectedBurrito, setSelectedBurrito] = useState(null);
+  const [errorBurrito, setErrorBurritos] = useState([]);
 
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,6 +57,27 @@ export default function NewTCoreContent() {
     setErrorDialogOpen(false);
     handleClose();
   };
+
+  const checkExistingRepo = async (name) => {
+    const response = await getJson("/burrito/metadata/summaries");
+    const data = await response.json;
+
+    // Filter only those with flavor_type = scripture
+    const burritoArray = Object.entries(data).map(([key, value]) => ({
+      path: key,
+      ...value,
+    }));
+
+    const scriptures = burritoArray.find(
+      (item) => item?.flavor === "x-tcore" && item?.abbreviation === name
+    );
+    if (scriptures) {
+      if (Object.keys(scriptures).length > 0) {
+        return true;
+      }
+    }
+    return false;
+  };
   useEffect(() => {
     if (selectedBurrito) {
       setContentAbbr(selectedBurrito.abbreviation);
@@ -74,25 +97,38 @@ export default function NewTCoreContent() {
   }, []);
 
   const handleCreate = async () => {
-    const payload = {
-      usfm_repo_path: selectedBurrito.path,
-      book_code: bookCode,
-    };
-    const response = await postJson(
-      "/git/new-tcore-resource",
-      JSON.stringify(payload),
-      debugRef.current
+    let isHere = await checkExistingRepo(
+      `${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`
     );
-    if (response.ok) {
-      window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
-    } else {
+    if (isHere) {
       setErrorMessage(
         `${doI18n(
-          "pages:core-contenthandler_t_core:t_core_project_not_created",
+          "pages:core-contenthandler_t_core:project_already_exist",
           i18nRef.current
-        )}: ${response.status}`
+        )}`
       );
       setErrorDialogOpen(true);
+    } else {
+      const payload = {
+        usfm_repo_path: selectedBurrito.path,
+        book_code: bookCode,
+      };
+      const response = await postJson(
+        "/git/new-tcore-resource",
+        JSON.stringify(payload),
+        debugRef.current
+      );
+      if (response.ok) {
+        window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
+      } else {
+        setErrorMessage(
+          `${doI18n(
+            "pages:core-contenthandler_t_core:t_core_project_not_created",
+            i18nRef.current
+          )}: ${response.status}`
+        );
+        setErrorDialogOpen(true);
+      }
     }
   };
   useEffect(() => {
@@ -130,6 +166,23 @@ export default function NewTCoreContent() {
     }
     fetchSummaries();
   }, [i18nRef.current]);
+
+  useEffect(() => {
+    if (!burritos.length) return;
+
+    const checkRepos = async () => {
+      let err = [];
+      for (let b of burritos) {
+        let result = await checkExistingRepo(
+          `${b.abbreviation.toLowerCase()}_tcchecks`
+        );
+        if (result) err.push(b);
+      }
+      setErrorBurritos(err);
+    };
+
+    checkRepos();
+  }, [burritos]);
 
   const handleSelectBurrito = (event) => {
     const name = event.target.value;
@@ -198,11 +251,20 @@ export default function NewTCoreContent() {
                 i18nRef.current
               )}
             >
-              {burritos.map((burrito) => (
-                <MenuItem key={burrito.name} value={burrito.name}>
-                  {burrito.name}
-                </MenuItem>
-              ))}
+              {burritos.map((burrito) => {
+                const repoExists = errorBurrito.find(
+                  (e) => e.path == burrito.path
+                );
+                return (
+                  <MenuItem
+                    key={burrito.name}
+                    value={burrito.name}
+                    disabled={repoExists}
+                  >
+                    {burrito.name}
+                  </MenuItem>
+                );
+              })}
             </TextField>
           </FormControl>
 

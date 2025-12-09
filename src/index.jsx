@@ -2,7 +2,7 @@ import {createRoot} from "react-dom/client";
 import {SpaContainer} from "pithekos-lib";
 import {createHashRouter, RouterProvider} from "react-router-dom";
 import './index.css';
-import HelloWorld from "./pages/tCoreContent";
+import NewTCoreContent from "./pages/tCoreContent";
 import App from "./App";
 
 const router = createHashRouter([
@@ -11,8 +11,8 @@ const router = createHashRouter([
     element: <App />,
   },
   {
-    path: "tCoreContent",
-    element: <HelloWorld />,
+    path: "/createDocument/tCoreContent",
+    element: <NewTCoreContent />,
   },
 ]);
 
