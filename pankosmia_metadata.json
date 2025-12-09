@@ -42,8 +42,7 @@
     "project_already_exist" :{
       "fr": "Vous possedez deja un projet tCore ayant pour origin cette bible",
       "en": "There is a tCore project that have this bible for origin"
-  }
-}
+  },
     "t_core_project_not_created" : {
       "fr" : "le projet de check tCore n'a pas été créé",
       "en" : "the tCore check project could not be created"   
