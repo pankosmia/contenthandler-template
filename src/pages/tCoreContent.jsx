@@ -267,7 +267,6 @@ export default function NewTCoreContent() {
               })}
             </TextField>
           </FormControl>
-
           <TextField
             id="abbr"
             disabled
@@ -288,7 +287,6 @@ export default function NewTCoreContent() {
               setContentAbbr(event.target.value);
             }}
           />
-
           <TextField
             id="languageCode"
             sx={{
@@ -308,7 +306,8 @@ export default function NewTCoreContent() {
             onChange={(event) => {
               setContentLanguageCode(event.target.value);
             }}
-          />
+          />{" "}
+          {/* 
           <>
             <Grid2
               container
@@ -414,8 +413,8 @@ export default function NewTCoreContent() {
                   }}
                 />
               </Grid2>
-            </Grid2>
-          </>
+            </Grid2> */}
+          {/* </> */}
         </Stack>
 
         <DialogActions>
@@ -428,11 +427,13 @@ export default function NewTCoreContent() {
             color="primary"
             disabled={
               !(
-                contentAbbr.trim().length > 0 &&
-                contentLanguageCode.trim().length > 0 &&
-                bookCode.trim().length === 3 &&
-                bookTitle.trim().length > 0 &&
-                bookAbbr.trim().length > 0
+                (
+                  contentAbbr.trim().length > 0 &&
+                  contentLanguageCode.trim().length > 0
+                )
+                // bookCode.trim().length === 3 &&
+                // bookTitle.trim().length > 0 &&
+                // bookAbbr.trim().length > 0
               )
             }
             onClick={handleCreate}

@@ -2,6 +2,8 @@
   "id": "core-contenthandler_t_core",
   "exclude_from_menu": true,
   "exclude_from_dashboard": true,
+  "minServerVersion": "0.12.11",
+
   "require": {
     "net": false,
     "debug": false
