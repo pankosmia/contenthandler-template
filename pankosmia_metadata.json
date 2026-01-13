@@ -14,7 +14,7 @@
         {
           "doc": "Create a document for translationCore",
           "label": "pages:content:new_tcore_content",
-          "url": "/clients/core-contenthandler_t_core#/createDocument/tCoreContent"
+          "url": "/createDocument/tCoreContent"
         }
       ]
     }
