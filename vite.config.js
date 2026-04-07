@@ -14,6 +14,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
     emptyOutDir: true,
+    sourcemap:true
     
   },
   base: '/clients/contenthandler-template/'
