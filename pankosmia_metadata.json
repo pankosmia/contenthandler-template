@@ -41,13 +41,13 @@
       "fr": "Au moins un projet de traduction local est requis pour créer un projet d'alignement",
       "en": "Need at least one local translation project to create an alignment project "
     },
-    "project_already_exist" : {
+    "project_already_exist": {
       "fr": "Des vérifications tCore ont déjà cette bible comme source",
       "en": "There are tCore checks that already have this bible as source"
-  },
-    "t_core_project_not_created" : {
-      "fr" : "les vérifications tCore n'ont pas pu être créées",
-      "en" : "tCore checks could not be created"   
+    },
+    "t_core_project_not_created": {
+      "fr": "les vérifications tCore n'ont pas pu être créées",
+      "en": "tCore checks could not be created"
     }
   }
 }
