@@ -8,15 +8,13 @@ export default function ListMenuItem(listMenuItemProps) {
     menuItem: {
       display: "flex",
       justifyContent: "space-between",
-      color: 'Black',
+      color: "Black",
     },
   };
 
   return (
-    <div style={(styles.menuItem)}>
-      <div
-        style={styles.menuItem}
-      >
+    <div style={styles.menuItem}>
+      <div style={styles.menuItem}>
         <Typography
           style={{ width: "100%" }}
           noWrap
