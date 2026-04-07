@@ -1,7 +1,7 @@
 export const sx = {
   select: {
-      // "&.Mui-focused .MuiOutlinedInput-notchedOutline": {borderColor: "rgb(25, 118, 210)", borderWidth: "thin"},
-      background: 'white',
+    // "&.Mui-focused .MuiOutlinedInput-notchedOutline": {borderColor: "rgb(25, 118, 210)", borderWidth: "thin"},
+    background: "white",
   },
   inputLabel: {
     // background: 'purple',
@@ -10,6 +10,6 @@ export const sx = {
     // fontSize: '0.875rem',
     // "&.Mui-focused": {color: "rgb(25, 118, 210)"},
   },
-}
+};
 
 export default sx;
