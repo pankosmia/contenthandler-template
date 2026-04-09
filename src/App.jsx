@@ -1,7 +1,7 @@
 import { useContext, useState, useCallback, useEffect } from "react";
 import { Button, Chip, Grid2 } from "@mui/material";
-import {doI18n } from "pithekos-lib";
-import {i18nContext} from 'pankosmia-rcl'
+import { doI18n } from "pithekos-lib";
+import { i18nContext } from "pankosmia-rcl";
 import { useNavigate } from "react-router-dom";
 function App() {
   const [maxWindowHeight, setMaxWindowHeight] = useState(
