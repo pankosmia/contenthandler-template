@@ -69,7 +69,7 @@ export default function NewTCoreContent() {
     }));
 
     const scriptures = burritoArray.find(
-      (item) => item?.flavor === "x-tcore" && item?.abbreviation === name
+      (item) => item?.flavor === "x-tcore" && item?.abbreviation === name,
     );
     if (scriptures) {
       if (Object.keys(scriptures).length > 0) {
@@ -98,14 +98,14 @@ export default function NewTCoreContent() {
 
   const handleCreate = async () => {
     let isHere = await checkExistingRepo(
-      `${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`
+      `${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`,
     );
     if (isHere) {
       setErrorMessage(
         `${doI18n(
           "pages:core-contenthandler_t_core:project_already_exist",
-          i18nRef.current
-        )}`
+          i18nRef.current,
+        )}`,
       );
       setErrorDialogOpen(true);
     } else {
@@ -116,7 +116,7 @@ export default function NewTCoreContent() {
       const response = await postJson(
         "/git/new-tcore-resource",
         JSON.stringify(payload),
-        debugRef.current
+        debugRef.current,
       );
       if (response.ok) {
         window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
@@ -124,8 +124,8 @@ export default function NewTCoreContent() {
         setErrorMessage(
           `${doI18n(
             "pages:core-contenthandler_t_core:t_core_project_not_created",
-            i18nRef.current
-          )}: ${response.status}`
+            i18nRef.current,
+          )}: ${response.status}`,
         );
         setErrorDialogOpen(true);
       }
@@ -147,14 +147,14 @@ export default function NewTCoreContent() {
         const scriptures = burritoArray.filter(
           (item) =>
             item?.flavor === "textTranslation" &&
-            item.path.startsWith("_local_/_local_")
+            item.path.startsWith("_local_/_local_"),
         );
         if (scriptures.length <= 0) {
           setErrorMessage(
             doI18n(
               `pages:core-contenthandler_t_core:no_local_project`,
-              i18nRef.current
-            )
+              i18nRef.current,
+            ),
           );
           setErrorDialogOpen(true);
         }
@@ -174,7 +174,7 @@ export default function NewTCoreContent() {
       let err = [];
       for (let b of burritos) {
         let result = await checkExistingRepo(
-          `${b.abbreviation.toLowerCase()}_tcchecks`
+          `${b.abbreviation.toLowerCase()}_tcchecks`,
         );
         if (result) err.push(b);
       }
@@ -230,7 +230,7 @@ export default function NewTCoreContent() {
             <Typography variant="h6" component="div">
               {doI18n(
                 `pages:core-contenthandler_t_core:create_content_tCore`,
-                i18nRef.current
+                i18nRef.current,
               )}
             </Typography>
           </Toolbar>
@@ -248,12 +248,12 @@ export default function NewTCoreContent() {
               onChange={handleSelectBurrito}
               label={doI18n(
                 `pages:core-contenthandler_t_core:choose_document`,
-                i18nRef.current
+                i18nRef.current,
               )}
             >
               {burritos.map((burrito) => {
                 const repoExists = errorBurrito.find(
-                  (e) => e.path == burrito.path
+                  (e) => e.path == burrito.path,
                 );
                 return (
                   <MenuItem
