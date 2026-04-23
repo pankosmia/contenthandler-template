@@ -48,6 +48,15 @@
     "t_core_project_not_created": {
       "fr": "les vérifications tCore n'ont pas pu être créées",
       "en": "tCore checks could not be created"
+    },
+    "required_field": {
+      "en": "* Required fields",
+      "fr": "* Champs obligatoires",
+      "id": "* Data yg diperlukan",
+      "es": "* Campos requeridos"
+    },
+    "new_checks": {
+      "en": "New checks"
     }
   }
 }

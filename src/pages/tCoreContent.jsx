@@ -1,33 +1,26 @@
 import { useState, useEffect, useContext } from "react";
 import {
-  AppBar,
-  Button,
   FormControl,
-  Stack,
   TextField,
-  Toolbar,
-  Typography,
-  Select,
   MenuItem,
-  InputLabel,
-  Grid2,
-  DialogActions,
-  Dialog,
   Box,
   DialogContent,
+  Grid2,
+  DialogContentText,
 } from "@mui/material";
 
-import {
-  i18nContext,
-  debugContext,
-  postJson,
-  doI18n,
-  Header,
-  getJson,
-} from "pithekos-lib";
+import { postJson, doI18n, getJson } from "pithekos-lib";
 import sx from "./Selection.styles";
 
 import ListMenuItem from "./ListMenuItem";
+import ErrorDialog from "./ErrorDialog";
+import {
+  PanDialog,
+  PanDialogActions,
+  i18nContext,
+  debugContext,
+  Header,
+} from "pankosmia-rcl";
 
 export default function NewTCoreContent() {
   const { i18nRef } = useContext(i18nContext);
@@ -45,17 +38,22 @@ export default function NewTCoreContent() {
   const [bookCode, setBookCode] = useState("");
   const [bookTitle, setBookTitle] = useState("");
   const [bookAbbr, setBookAbbr] = useState("");
+  const hash = window.location.hash;
+  const query = hash.includes("?") ? hash.split("?") : "";
+  const typePageQuery = new URLSearchParams(query[1]);
+  const returnType = typePageQuery.get("returnTypePage");
 
   const handleClose = () => {
-    setTimeout(() => {
-      window.location.href = "/clients/content";
-      // window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
-    }, 200);
-  };
-
-  const handleCloseErrorDialog = () => {
-    setErrorDialogOpen(false);
-    handleClose();
+    if (returnType === "dashboard") {
+      setTimeout(() => {
+        window.location.href = "/clients/main";
+      }, 200);
+    } else {
+      setTimeout(() => {
+        window.location.href = "/clients/content";
+        // window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
+      }, 200);
+    }
   };
 
   const checkExistingRepo = async (name) => {
@@ -210,103 +208,98 @@ export default function NewTCoreContent() {
         currentId="content"
         requireNet={false}
       />
-      <Dialog
-        fullWidth={true}
-        open={true}
-        onClose={handleClose}
-        sx={{
-          backdropFilter: "blur(3px)",
-        }}
+      <PanDialog
+        titleLabel={doI18n(
+          `pages:core-contenthandler_t_core:create_content_tCore`,
+          i18nRef.current,
+        )}
+        isOpen={true}
+        closeFn={handleClose}
       >
-        <AppBar
-          color="secondary"
-          sx={{
-            position: "relative",
-            borderTopLeftRadius: 4,
-            borderTopRightRadius: 4,
-          }}
-        >
-          <Toolbar>
-            <Typography variant="h6" component="div">
-              {doI18n(
-                `pages:core-contenthandler_t_core:create_content_tCore`,
-                i18nRef.current,
-              )}
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Typography variant="subtitle2" sx={{ ml: 1, p: 1 }}>
-          {doI18n(`pages:content:required_field`, i18nRef.current)}
-        </Typography>
-        <Stack spacing={2} sx={{ m: 2 }}>
-          <FormControl fullWidth sx={{ mt: 2 }}>
+        <DialogContentText variant="subtitle2" sx={{ ml: 1, p: 1 }}>
+          {doI18n(
+            `pages:core-contenthandler_t_core:required_field`,
+            i18nRef.current,
+          )}
+        </DialogContentText>
+        <DialogContent>
+          <Grid2
+            container
+            spacing={2}
+            justifyItems="flex-end"
+            alignItems="stretch"
+            flexDirection={"column"}
+          >
+            <FormControl fullWidth>
+              <TextField
+                required
+                id="burrito-select-label"
+                select
+                value={selectedBurrito?.name || ""}
+                onChange={handleSelectBurrito}
+                label={doI18n(
+                  `pages:core-contenthandler_t_core:choose_document`,
+                  i18nRef.current,
+                )}
+              >
+                {burritos.map((burrito) => {
+                  const repoExists = errorBurrito.find(
+                    (e) => e.path === burrito.path,
+                  );
+                  return (
+                    <MenuItem
+                      key={burrito.name}
+                      value={burrito.name}
+                      disabled={repoExists}
+                    >
+                      {burrito.name}
+                    </MenuItem>
+                  );
+                })}
+              </TextField>
+            </FormControl>
             <TextField
-              required
-              id="burrito-select-label"
-              select
-              value={selectedBurrito?.name || ""}
-              onChange={handleSelectBurrito}
-              label={doI18n(
-                `pages:core-contenthandler_t_core:choose_document`,
-                i18nRef.current,
-              )}
-            >
-              {burritos.map((burrito) => {
-                const repoExists = errorBurrito.find(
-                  (e) => e.path == burrito.path,
-                );
-                return (
-                  <MenuItem
-                    key={burrito.name}
-                    value={burrito.name}
-                    disabled={repoExists}
-                  >
-                    {burrito.name}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-          </FormControl>
-          <TextField
-            id="abbr"
-            disabled
-            sx={{
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            label={doI18n("pages:content:abbreviation", i18nRef.current)}
-            value={contentAbbr}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            onChange={(event) => {
-              setContentAbbr(event.target.value);
-            }}
-          />
-          <TextField
-            id="languageCode"
-            sx={{
-              pointerEvents: "none", // disables all mouse interaction
-              "& .MuiInputBase-input": {
-                cursor: "default", // prevents text cursor
-              },
-            }}
-            slotProps={{
-              input: {
-                readOnly: true,
-              },
-            }}
-            disabled
-            label={doI18n("pages:content:lang_code", i18nRef.current)}
-            value={contentLanguageCode}
-            onChange={(event) => {
-              setContentLanguageCode(event.target.value);
-            }}
-          />{" "}
+              id="abbr"
+              disabled
+              sx={{
+                pointerEvents: "none", // disables all mouse interaction
+                "& .MuiInputBase-input": {
+                  cursor: "default", // prevents text cursor
+                },
+              }}
+              label={doI18n("pages:content:abbreviation", i18nRef.current)}
+              value={contentAbbr}
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
+              onChange={(event) => {
+                setContentAbbr(event.target.value);
+              }}
+            />
+            <TextField
+              id="languageCode"
+              sx={{
+                pointerEvents: "none", // disables all mouse interaction
+                "& .MuiInputBase-input": {
+                  cursor: "default", // prevents text cursor
+                },
+              }}
+              slotProps={{
+                input: {
+                  readOnly: true,
+                },
+              }}
+              disabled
+              label={doI18n("pages:content:lang_code", i18nRef.current)}
+              value={contentLanguageCode}
+              onChange={(event) => {
+                setContentLanguageCode(event.target.value);
+              }}
+            />
+          </Grid2>
+
           {/* 
           <>
             <Grid2
@@ -415,48 +408,35 @@ export default function NewTCoreContent() {
               </Grid2>
             </Grid2> */}
           {/* </> */}
-        </Stack>
-
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            {doI18n("pages:content:close", i18nRef.current)}
-          </Button>
-          <Button
-            autoFocus
-            variant="contained"
-            color="primary"
-            disabled={
-              !(
-                (
-                  contentAbbr.trim().length > 0 &&
-                  contentLanguageCode.trim().length > 0
-                )
-                // bookCode.trim().length === 3 &&
-                // bookTitle.trim().length > 0 &&
-                // bookAbbr.trim().length > 0
-              )
-            }
-            onClick={handleCreate}
-          >
-            {doI18n("pages:content:create", i18nRef.current)}
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* Error Dialog */}
-      <Dialog open={errorDialogOpen} onClose={handleCloseErrorDialog}>
-        <DialogContent>
-          <Typography color="error">{errorMessage}</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseErrorDialog}
-            variant="contained"
-            color="primary"
-          >
-            {doI18n("pages:content:close", i18nRef.current)}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <PanDialogActions
+          closeFn={handleClose}
+          closeLabel={doI18n("pages:content:close", i18nRef.current)}
+          actionFn={handleCreate}
+          actionLabel={doI18n(
+            "pages:core-contenthandler_t_core:new_checks",
+            i18nRef.current,
+          )}
+          isDisabled={
+            !(
+              (
+                contentAbbr.trim().length > 0 &&
+                contentLanguageCode.trim().length > 0
+              )
+              // bookCode.trim().length === 3 &&
+              // bookTitle.trim().length > 0 &&
+              // bookAbbr.trim().length > 0
+            )
+          }
+        />
+      </PanDialog>
+      {/* Error Dialog */}
+      <ErrorDialog
+        setErrorDialogOpen={setErrorDialogOpen}
+        handleClose={handleClose}
+        errorDialogOpen={errorDialogOpen}
+        errorMessage={errorMessage}
+      />
     </Box>
   );
 }
