@@ -14,7 +14,7 @@
         {
           "doc": "Create a document for translationCore",
           "label": "pages:content:new_tcore_content",
-          "url": "/createDocument/tCoreContent"
+          "url": "/createDocument/tCContent"
         }
       ]
     }
@@ -30,8 +30,8 @@
       "en": "Content goes here"
     },
     "create_content_tCore": {
-      "en": "tCore checks",
-      "fr": "Vérifications tCore"
+      "en": "tC checks",
+      "fr": "Vérifications tC"
     },
     "choose_document": {
       "en": "Choose document",
@@ -48,6 +48,18 @@
     "t_core_project_not_created": {
       "fr": "les vérifications tCore n'ont pas pu être créées",
       "en": "tCore checks could not be created"
+    },
+    "from_tC3_project": {
+      "fr": "depuis un projet tC3",
+      "en": "From tC3 project"
+    },
+    "from_local_text_translation": {
+      "en": "From local text translation",
+      "fr": "Depuis un project local"
+    },
+    "from_usfm": {
+      "en": "From USFM",
+      "fr": "Depuis un USFM"
     }
   }
 }

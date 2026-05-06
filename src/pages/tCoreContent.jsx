@@ -7,27 +7,74 @@ import {
   TextField,
   Toolbar,
   Typography,
-  Select,
   MenuItem,
-  InputLabel,
-  Grid2,
   DialogActions,
   Dialog,
   Box,
   DialogContent,
 } from "@mui/material";
 
-import {
-  i18nContext,
-  debugContext,
-  postJson,
-  doI18n,
-  Header,
-  getJson,
-} from "pithekos-lib";
-import sx from "./Selection.styles";
+import { postJson, doI18n, getJson, postEmptyJson } from "pithekos-lib";
+import { i18nContext, debugContext, Header } from "pankosmia-rcl";
+import { enqueueSnackbar } from "notistack";
+const checkExistingRepo = async (name) => {
+  const response = await getJson("/burrito/metadata/summaries");
+  const data = await response.json;
 
-import ListMenuItem from "./ListMenuItem";
+  // Filter only those with flavor_type = scripture
+  const burritoArray = Object.entries(data).map(([key, value]) => ({
+    path: key,
+    ...value,
+  }));
+
+  const scriptures = burritoArray.find(
+    (item) => item?.flavor === "x-tcore" && item?.abbreviation === name,
+  );
+  if (scriptures) {
+    if (Object.keys(scriptures).length > 0) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const handleCreate = async (burritoAbr, debugRef, i18nRef) => {
+  let isHere = await checkExistingRepo(`${burritoAbr.toLowerCase()}_tcchecks`);
+  if (isHere) {
+    enqueueSnackbar(
+      `${doI18n(
+        "pages:core-contenthandler_t_core:project_already_exist",
+        i18nRef.current,
+      )}`,
+      {
+        variant: "error",
+      },
+    );
+  } else {
+    const payload = {
+      usfm_repo_path: `_local_/_local_/${burritoAbr}`,
+      book_code: "",
+    };
+    const response = await postJson(
+      "/git/new-tcore-resource",
+      JSON.stringify(payload),
+      debugRef.current,
+    );
+    if (response.ok) {
+      return true;
+    } else {
+      enqueueSnackbar(
+        `${doI18n(
+          "pages:core-contenthandler_t_core:t_core_project_not_created",
+          i18nRef.current,
+        )}: ${response.status}`,
+        {
+          variant: "error",
+        },
+      );
+    }
+  }
+};
 
 export default function NewTCoreContent() {
   const { i18nRef } = useContext(i18nContext);
@@ -58,26 +105,6 @@ export default function NewTCoreContent() {
     handleClose();
   };
 
-  const checkExistingRepo = async (name) => {
-    const response = await getJson("/burrito/metadata/summaries");
-    const data = await response.json;
-
-    // Filter only those with flavor_type = scripture
-    const burritoArray = Object.entries(data).map(([key, value]) => ({
-      path: key,
-      ...value,
-    }));
-
-    const scriptures = burritoArray.find(
-      (item) => item?.flavor === "x-tcore" && item?.abbreviation === name,
-    );
-    if (scriptures) {
-      if (Object.keys(scriptures).length > 0) {
-        return true;
-      }
-    }
-    return false;
-  };
   useEffect(() => {
     if (selectedBurrito) {
       setContentAbbr(selectedBurrito.abbreviation);
@@ -96,41 +123,6 @@ export default function NewTCoreContent() {
     setBookAbbr("");
   }, []);
 
-  const handleCreate = async () => {
-    let isHere = await checkExistingRepo(
-      `${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`,
-    );
-    if (isHere) {
-      setErrorMessage(
-        `${doI18n(
-          "pages:core-contenthandler_t_core:project_already_exist",
-          i18nRef.current,
-        )}`,
-      );
-      setErrorDialogOpen(true);
-    } else {
-      const payload = {
-        usfm_repo_path: selectedBurrito.path,
-        book_code: bookCode,
-      };
-      const response = await postJson(
-        "/git/new-tcore-resource",
-        JSON.stringify(payload),
-        debugRef.current,
-      );
-      if (response.ok) {
-        window.location.href = `/clients/main/#/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`;
-      } else {
-        setErrorMessage(
-          `${doI18n(
-            "pages:core-contenthandler_t_core:t_core_project_not_created",
-            i18nRef.current,
-          )}: ${response.status}`,
-        );
-        setErrorDialogOpen(true);
-      }
-    }
-  };
   useEffect(() => {
     async function fetchSummaries() {
       try {
@@ -306,115 +298,7 @@ export default function NewTCoreContent() {
             onChange={(event) => {
               setContentLanguageCode(event.target.value);
             }}
-          />{" "}
-          {/* 
-          <>
-            <Grid2
-              container
-              spacing={2}
-              justifyItems="flex-end"
-              alignItems="stretch"
-            >
-              <Grid2 item size={4}>
-                <FormControl sx={{ width: "100%" }}>
-                  <InputLabel
-                    id="bookCode-label"
-                    required
-                    htmlFor="bookCode"
-                    sx={sx.inputLabel}
-                  >
-                    {doI18n("pages:content:book_code", i18nRef.current)}
-                  </InputLabel>
-                  <Select
-                    variant="outlined"
-                    required
-                    labelId="bookCode-label"
-                    name="bookCode"
-                    inputProps={{
-                      id: "bookCode",
-                    }}
-                    value={bookCode}
-                    label={doI18n("pages:content:book_code", i18nRef.current)}
-                    onChange={(event) => {
-                      setBookCode(event.target.value);
-                      setBookAbbr(
-                        ["1", "2", "3"].includes(event.target.value[0])
-                          ? event.target.value.slice(0, 2) +
-                              event.target.value[2].toLowerCase()
-                          : event.target.value[0] +
-                              event.target.value.slice(1).toLowerCase()
-                      );
-                      setBookTitle(
-                        doI18n(
-                          `scripture:books:${event.target.value}`,
-                          i18nRef.current
-                        )
-                      );
-                    }}
-                    sx={sx.select}
-                  >
-                    {selectedBurrito?.name &&
-                      selectedBurrito.book_codes.map((listItem, n) => (
-                        <MenuItem key={n} value={listItem} dense>
-                          <ListMenuItem
-                            listItem={`${listItem} - ${doI18n(
-                              `scripture:books:${listItem}`,
-                              i18nRef.current
-                            )}`}
-                          />
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </Grid2>
-              <Grid2 item size={4}>
-                <TextField
-                  id="bookAbbr"
-                  disabled
-                  sx={{
-                    width: "100%",
-                    pointerEvents: "none", // disables all mouse interaction
-                    "& .MuiInputBase-input": {
-                      cursor: "default", // prevents text cursor
-                    },
-                  }}
-                  label={doI18n("pages:content:book_abbr", i18nRef.current)}
-                  value={bookAbbr}
-                  slotProps={{
-                    input: {
-                      readOnly: true,
-                    },
-                  }}
-                  onChange={(event) => {
-                    setBookAbbr(event.target.value);
-                  }}
-                />
-              </Grid2>
-              <Grid2 item size={4}>
-                <TextField
-                  id="bookTitle"
-                  disabled
-                  sx={{
-                    width: "100%",
-                    pointerEvents: "none", // disables all mouse interaction
-                    "& .MuiInputBase-input": {
-                      cursor: "default", // prevents text cursor
-                    },
-                  }}
-                  label={doI18n("pages:content:book_title", i18nRef.current)}
-                  value={bookTitle}
-                  slotProps={{
-                    input: {
-                      readOnly: true,
-                    },
-                  }}
-                  onChange={(event) => {
-                    setBookTitle(event.target.value);
-                  }}
-                />
-              </Grid2>
-            </Grid2> */}
-          {/* </> */}
+          />
         </Stack>
 
         <DialogActions>
@@ -427,16 +311,23 @@ export default function NewTCoreContent() {
             color="primary"
             disabled={
               !(
-                (
-                  contentAbbr.trim().length > 0 &&
-                  contentLanguageCode.trim().length > 0
-                )
-                // bookCode.trim().length === 3 &&
-                // bookTitle.trim().length > 0 &&
-                // bookAbbr.trim().length > 0
+                contentAbbr.trim().length > 0 &&
+                contentLanguageCode.trim().length > 0
               )
             }
-            onClick={handleCreate}
+            onClick={async () => {
+              let isOk = handleCreate(
+                selectedBurrito.abbreviation,
+                debugRef,
+                i18nRef,
+              );
+              if (isOk) {
+                await postEmptyJson(
+                  `/app-state/current-project/_local_/_local_/${selectedBurrito.abbreviation.toLowerCase()}_tcchecks`,
+                );
+                window.location.href = `/clients/uw-client-checks#`;
+              }
+            }}
           >
             {doI18n("pages:content:create", i18nRef.current)}
           </Button>
