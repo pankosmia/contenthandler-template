@@ -38,7 +38,7 @@ export default function CreatTCProjectFromFile() {
   const [projectAbr, setProjectAbr] = useState("");
 
   const [manifest, setManifest] = useState(null);
-
+  console.log(manifest);
   useEffect(() => {
     if (!fileUUID || typeDocument !== "zip") return;
 
@@ -57,6 +57,17 @@ export default function CreatTCProjectFromFile() {
         const manifestText = await manifestFile.async("string");
         const manifestData = JSON.parse(manifestText);
         setManifest(manifestData);
+        if (manifestData?.target_language?.id) {
+          setCurrentLanguage((prev) => {
+            let newt = { ...prev };
+            newt.language_code = manifestData?.target_language?.id;
+            return newt;
+          });
+        }
+        if (manifestData?.resource?.id) {
+          setProjectAbr(manifestData?.resource?.id);
+          setProjectName(manifestData?.resource?.id);
+        }
       } catch (err) {
         console.error("Failed to read zip:", err);
       }
@@ -122,38 +133,42 @@ export default function CreatTCProjectFromFile() {
           <Box textAlign="center" mb={2}>
             {fileName || "No file selected"}
           </Box>
-          <PanVersificationPicker
-            versification={versification}
-            setVersification={setVersification}
-            // isOpen={open}
-          />
-          <PanLanguagePicker
-            currentLanguage={currentLanguage}
-            setCurrentLanguage={setCurrentLanguage}
-            setIsValid={setLanguageIsValid}
-          />
-          <TextField
-            fullWidth
-            label={doI18n("pages:content:abbreviation", i18nRef.current)}
-            value={bookCode}
-            InputProps={{ readOnly: true }}
-            margin="dense"
-          />
-          <TextField
-            fullWidth
-            label="Project Name"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            margin="dense"
-          />
 
-          <TextField
-            fullWidth
-            label="Project Abbreviation"
-            value={projectAbr}
-            onChange={(e) => setProjectAbr(e.target.value)}
-            margin="dense"
-          />
+          <Box mb={2}>
+            <TextField
+              fullWidth
+              label="Project Name"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              margin="dense"
+            />
+          </Box>
+
+          <Box mb={2}>
+            <TextField
+              fullWidth
+              label="Project Abbreviation"
+              value={projectAbr}
+              onChange={(e) => setProjectAbr(e.target.value)}
+              margin="dense"
+            />
+          </Box>
+
+          <Box mb={2}>
+            <PanVersificationPicker
+              versification={versification}
+              setVersification={setVersification}
+              isOpen={true}
+            />
+          </Box>
+
+          <Box mb={2}>
+            <PanLanguagePicker
+              currentLanguage={currentLanguage}
+              setCurrentLanguage={setCurrentLanguage}
+              setIsValid={setLanguageIsValid}
+            />
+          </Box>
         </DialogContent>
 
         <PanDialogActions

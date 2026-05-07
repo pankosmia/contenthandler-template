@@ -10,16 +10,27 @@
   },
   "endpoints": {
     "x-tcore": {
-      "create_document": [
+      "initDocument": [
         {
           "doc": "Create a document for translationCore",
           "label": "pages:content:new_tcore_content",
+          "url": "/createDocument/tCContentRaw?burritoName=%XXX%"
+        }
+      ],
+      "importContent": [
+        {
+          "doc": "Create a document for translationCore",
+          "label": "pages:core-contenthandler_t_core:importTc4",
           "url": "/createDocument/tCContent"
         }
       ]
     }
   },
   "i18n": {
+    "importTc4": {
+      "en": "Start checking from a USFM book or a tC 3 project",
+      "fr": "Commencer a chercher depuis un livre USFM ou un project tC 3"
+    },
     "title": {
       "en": "core-contenthandler_t_core"
     },
@@ -60,6 +71,10 @@
     "from_usfm": {
       "en": "From USFM",
       "fr": "Depuis un USFM"
+    },
+    "close": {
+      "en": "Close",
+      "fr": "Fermer"
     }
   }
 }

@@ -10,8 +10,7 @@ export default function CreatTCProject() {
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedUUID, setSelectedUUID] = useState(null);
-  console.log(selectedUUID);
-  console.log(selectedFile);
+
   // USFM picker
   const { openFilePicker: openUsfmPicker, filesContent: usfmFiles } =
     useFilePicker({
@@ -106,7 +105,7 @@ export default function CreatTCProject() {
             </Typography>
           </Button>
 
-          <Button
+          {/* <Button
             variant="outlined"
             onClick={() => navigate("/createDocument/tCContentRaw")}
           >
@@ -116,15 +115,16 @@ export default function CreatTCProject() {
                 i18nRef.current,
               )}
             </Typography>
-          </Button>
+          </Button> */}
         </Box>
       </DialogContent>
 
       <PanDialogActions
-        actionFn={() => {}}
-        actionLabel="Do it!"
-        closeFn={() => false}
-        closeLabel="Don't do it!"
+        closeFn={() => navigate("/clients/main")}
+        closeLabel={doI18n(
+          "pages:core-contenthandler_t_core:close",
+          i18nRef.current,
+        )}
         closeOnAction={false}
       />
     </PanDialog>
