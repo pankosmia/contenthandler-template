@@ -64,6 +64,14 @@
       "fr": "depuis un projet tC3",
       "en": "From tC3 project"
     },
+    "import": {
+      "en": "Import Project",
+      "fr": "Importer un projet"
+    },
+    "continue": {
+      "en": "Continue",
+      "fr": "Continuer"
+    },
     "from_local_text_translation": {
       "en": "From local text translation",
       "fr": "Depuis un project local"

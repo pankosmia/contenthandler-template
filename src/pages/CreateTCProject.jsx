@@ -81,9 +81,12 @@ export default function CreatTCProject() {
   };
   return (
     <PanDialog
-      titleLabel="A Pointless Dialog"
+      titleLabel={doI18n(
+        "pages:core-contenthandler_t_core:import",
+        i18nRef.current,
+      )}
       isOpen={true}
-      closeFn={() => true}
+      closeFn={() => (window.location.href = "/clients/main")}
     >
       <DialogContent>
         <Box display="flex" gap={2} flexWrap="wrap" justifyContent="center">
@@ -120,12 +123,13 @@ export default function CreatTCProject() {
       </DialogContent>
 
       <PanDialogActions
-        closeFn={() => navigate("/clients/main")}
+        closeFn={() => (window.location.href = "/clients/main")}
         closeLabel={doI18n(
           "pages:core-contenthandler_t_core:close",
           i18nRef.current,
         )}
         closeOnAction={false}
+        onlyCloseButton={true}
       />
     </PanDialog>
   );

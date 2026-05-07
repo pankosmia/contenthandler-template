@@ -11,11 +11,14 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { doI18n, postEmptyJson, postJson } from "pithekos-lib";
 import { handleCreate } from "./tCoreContent";
+import { useNavigate } from "react-router-dom";
+
 import JSZip from "jszip";
 
 export default function CreatTCProjectFromFile() {
   const { i18nRef } = useContext(i18nContext);
   const { debugRef } = useContext(debugContext);
+  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
 
@@ -128,7 +131,14 @@ export default function CreatTCProjectFromFile() {
   }
   return (
     <Box>
-      <PanDialog titleLabel="File selected" isOpen={true} closeFn={() => true}>
+      <PanDialog
+        titleLabel={doI18n(
+          "pages:core-contenthandler_t_core:import",
+          i18nRef.current,
+        )}
+        isOpen={true}
+        closeFn={() => (window.location.href = "/clients/main")}
+      >
         <DialogContent>
           <Box textAlign="center" mb={2}>
             {fileName || "No file selected"}
@@ -175,9 +185,15 @@ export default function CreatTCProjectFromFile() {
           actionFn={() => {
             creatTextTranslation();
           }}
-          actionLabel="Continue"
-          closeFn={() => {}}
-          closeLabel="Cancel"
+          actionLabel={doI18n(
+            "pages:core-contenthandler_t_core:continue",
+            i18nRef.current,
+          )}
+          closeFn={() => (window.location.href = "/clients/main")}
+          closeLabel={doI18n(
+            "pages:core-contenthandler_t_core:close",
+            i18nRef.current,
+          )}
           closeOnAction={false}
         />
       </PanDialog>
