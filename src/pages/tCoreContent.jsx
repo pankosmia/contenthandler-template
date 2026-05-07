@@ -75,12 +75,13 @@ export default function NewTCoreContent() {
   useEffect(() => {
     async function creatOrGo() {
       //toDo selectedBurrito = ??
-      if (!checkExistingRepo(burritoName)) {
-        let isOk = handleCreate(burritoName, debugRef, i18nRef);
+      if (!(await checkExistingRepo(burritoName))) {
+        let isOk = await handleCreate(burritoName, debugRef, i18nRef);
       }
       await postEmptyJson(
         `/app-state/current-project/_local_/_local_/${burritoName.toLowerCase()}_tcchecks`,
       );
+
       window.location.href = `/clients/uw-client-checks#`;
     }
     creatOrGo();
