@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@rollup/rollup-win32-x64-msvc": "^4.60.3",
     "@vitejs/plugin-react": "^4.3.4",
     "husky": "^9.1.7",
     "prettier": "3.8.1",
