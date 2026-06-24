@@ -1,6 +1,6 @@
 import { useContext, useState, useCallback, useEffect } from "react";
 import { Chip, Grid2 } from "@mui/material";
-import { i18nContext } from "pankosmia-lib/http";
+import { i18nContext } from "pankosmia-rcl";
 import { doI18n } from "pankosmia-lib/i18n";
 import { useNavigate } from "react-router-dom";
 function App() {
